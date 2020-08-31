@@ -1,7 +1,25 @@
 const express = require('express')
+const morgan = require('morgan')
+const parser = require('body-parser')
 const app = express()
 
-app.use(express.json())
+//app.use(express.json())
+app.use(parser.json())
+
+const checkIfPost = (req) => req.method === 'POST'
+const format = ':method :url :status :res[content-length] - :response-time ms :body'
+
+app.use(morgan('tiny', {
+    skip: checkIfPost
+}))
+
+app.use(morgan(format, {
+    skip: (req, res) => !checkIfPost(req, res)
+}))
+
+morgan.token('body', (req) => {
+    return JSON.stringify(req.body)
+})
 
 let persons = [
     {
@@ -59,20 +77,19 @@ const generateId = () => {
 }
 
 app.post('/api/persons', (req, res) => {
-    const body = req.body
-    if (body.name || body.number) {
+    if (!req.body.name || !req.body.number) {
         return res.status(400).json({error: "Must include name and number"})
-    } else if (persons.find(person => person.name === body.name)) {
+    } else if (persons.find(person => person.name === req.body.name)) {
         return res.status(400).json({error: "Name must be unique"})
     }
     const person = {
-        name: body.name,
-        number: body.number,
+        name: req.body.name,
+        number: req.body.number,
         id: generateId()
     }
     persons = persons.concat(person)
     res.json(person)
-    console.log(person)
+
 })
 
 const PORT = 3001
