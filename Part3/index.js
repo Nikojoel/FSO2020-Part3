@@ -3,7 +3,7 @@ const morgan = require('morgan')
 const parser = require('body-parser')
 const app = express()
 
-//app.use(express.json())
+app.use(express.json())
 app.use(parser.json())
 
 const checkIfPost = (req) => req.method === 'POST'
