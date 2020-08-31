@@ -1,10 +1,13 @@
 const express = require('express')
 const morgan = require('morgan')
 const parser = require('body-parser')
+const cors = require('cors')
 const app = express()
 
+app.use(cors())
 app.use(express.json())
 app.use(parser.json())
+app.use(express.static('build'))
 
 const checkIfPost = (req) => req.method === 'POST'
 const format = ':method :url :status :res[content-length] - :response-time ms :body'
@@ -89,10 +92,9 @@ app.post('/api/persons', (req, res) => {
     }
     persons = persons.concat(person)
     res.json(person)
-
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
