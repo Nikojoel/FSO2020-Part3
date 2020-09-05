@@ -10,7 +10,8 @@
     "build:ui": "rm -rf build && cd ../../FSO2020/Part2/phonebook && npm run build --prod && cp -r build/ ../../../FSO2020-Part3/Part3",
     "deploy": "git push heroku master",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
-    "logs:prod": "heroku logs --tail"
+    "logs:prod": "heroku logs --tail",
+    "lint": "eslint ."
   },
   "proxy": "http://localhost:3001",
   "author": "",
@@ -21,9 +22,11 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mongoose": "^5.10.2",
+    "mongoose-unique-validator": "^2.0.3",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "eslint": "^7.8.1",
     "nodemon": "^2.0.4"
   }
 }
